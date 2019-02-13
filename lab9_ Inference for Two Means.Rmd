@@ -1,17 +1,4 @@
----
-title: "Lab8_YuweiJiang_01"
-author: "Yuwei Jiang"
-date: "November 1, 2018"
-NetID: 'eg4962'
-Class: 'STAT630-01'
-output:
-  html_document: default
-  pdf_document: default
-  word_document: default
 
----
-
-#Name:Yuwei Jiang  Class:stat630-01  NetId:eg4962
 Exercise#1
 ```{r}
 
