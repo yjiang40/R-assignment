@@ -1,0 +1,79 @@
+
+
+```{r}
+library(resampledata)
+data("GSS2002")
+
+
+# Ex 1
+death_penalty <- GSS2002$DeathPenalty[!is.na(GSS2002$DeathPenalty)]
+gender= GSS2002$Gender[!is.na(GSS2002$Gender)]
+
+levels(GSS2002$DeathPenalty)
+n_favor=sum(death_penalty=='Favor');n_favor
+
+n=length(death_penalty)
+phat=n_favor/n;phat
+
+ci_upper=phat+1.96*sqrt(phat*(1-phat)/n);ci_upper
+ci_lower=phat-1.96*sqrt(phat*(1-phat)/n);ci_lower
+
+#we are 95% confident that the population proportion of Americans that favor the death penalty is between 0.662185  and 0.7124327 .
+
+
+
+```
+
+```{r}
+#EX 2
+index <- which(is.na(GSS2002$Gender) | is.na(GSS2002$DeathPenalty))
+gender <- GSS2002$Gender[-index]
+death_penalty <- GSS2002$DeathPenalty[-index]
+length(gender)
+n_f=sum(gender=="Female");n_f
+n_m=sum(gender=="Male");n_m
+phat_f= sum(death_penalty=='Favor' & gender =='Female')/n_f;phat_f
+phat_m= sum(death_penalty=='Favor' & gender =='Male')/n_m;phat_m
+SE <- sqrt(phat*(1-phat)*(1/n_f + 1/n_m));SE
+z <- (phat_f - phat_m) / SE; z
+pvalue=2*(1-pnorm(abs(z)));pvalue
+#The result is highly significant, we reject null hypothesis since p value less than 0.01.Conclusively, the data suggest that the population proportion of males that favor the death penalty is different than the population proportion of females that favor the death penalty.
+```
+
+```{r}
+#EX3
+SE1 <- sqrt(phat_f*(1-phat_f)/n_f + phat_m*(1-phat_m)/n_m);SE1
+ci_l <- phat_f - phat_m - 1.96 * SE;ci_l
+ci_u <- phat_f - phat_m + 1.96 * SE;ci_u
+
+#We are 95% confident that the population proportion of females that favor the death penalty is between 0.07620213 and 0.1767597lower than the population proportion of males that favor the death penalty.
+
+```
+```{r}
+#EX4
+#a)
+index <- which(is.na(GSS2002$Education) | is.na(GSS2002$SpendSci))
+education <- GSS2002$Education[-index]
+spendsci <- GSS2002$SpendSci[-index]
+addmargins(table(education,spendsci))
+
+#b)
+?prop.table
+prop.table(table(education,spendsci),margin=1)
+#No,there does not appear to be a relationship between the two categorical variables. 
+
+#c)
+#Null hythothesis= Education and SpendSci are independent.
+# Alternative hypothesis: Education and SpendSci are dependent
+chisq1 <- chisq.test(education, spendsci)
+chisq1
+#The chi-square test statistic is 8.0804 with a p-value = 0.4257 Since the p-value > 0.01. we fail to reject null hythothesis, and conclude that the survey provides convincing evidence that education level and position on government spending on science are independent.
+
+#d)
+chisq1$expected
+#There are at least 5 expected counts in each cell, i.e., Eij ??? 5.
+# Random sampling (so the results can be generalized to some population).
+
+#e)
+chisq1$expected
+```
