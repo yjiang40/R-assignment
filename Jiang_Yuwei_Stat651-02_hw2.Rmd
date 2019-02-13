@@ -1,0 +1,130 @@
+---
+title: "Stat. 651-02 Homework 2"
+Name: Yuwei Jiang
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  word_document: default
+Date: October 29, 2018
+---
+#Name:Yuwei Jiang  NetID:eg4962
+
+#11.1
+```{r message=FALSE}
+library(shiny)
+library(datetime)
+library(macleish)
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+tail(whately_2015)
+
+whatly_2015plot= whately_2015 %>% ggplot(aes(x=when, y=temperature)) +
+  geom_line(color="darkgrey",size=1)+
+  geom_smooth()+
+  xlab('When')+
+  ylab('Temperature (degrees Fahrenheit)')
+whatly_2015plot
+
+
+subset(whately_2015$temperature, whately_2015$when == '2015-03-20 22:50:00')
+subset(whately_2015$temperature, whately_2015$when == '2015-09-23 08:20:00')
+subset(whately_2015$temperature, whately_2015$when == '2015-06-21 16:40:00')
+subset(whately_2015$temperature, whately_2015$when == '2015-12-22 04:50:00')
+
+p = whatly_2015plot + ggtitle("Average Temperature over Each 10-minute Interal in Whatly, Massachusetts")+
+  geom_text(x = as.POSIXct('2015-03-20 22:50:00'), y = -5.654,label='Vernal Equinoxe:03-20')+
+  geom_point(x=as.POSIXct('2015-03-20 22:50:00'), y = -4.654,color='red',size=2)+
+  geom_text(x= as.POSIXct('2015-10-03 08:20:00'), y = 26.08,label='Autumnal Equinoxe:09-23')+
+  geom_point(x= as.POSIXct('2015-09-23 08:20:00'), y = 24.08,color='red',size=2)+
+  geom_text(x = as.POSIXct('2015-06-21 16:40:00'), y = 22.94,label='Summer Solstices:06-21')+
+  geom_point(x = as.POSIXct('2015-06-21 16:40:00'), y = 20.94,color='red',size=2)+
+  geom_text(x = as.POSIXct('2015-12-01 04:50:00'), y = 7.75,label='Winter Solstices:12-22')+
+  geom_point(x = as.POSIXct('2015-12-22 04:50:00'), y = 8.75,color='red',size=2)
+p 
+  
+
+
+```
+
+
+#11.2
+```{r}
+
+
+head(whately_2015)
+text <- bind_rows(data.frame(x = as.POSIXct('2015-11-01 01:00:00'), y = 33, label =paste("12/27, cold front swung "),adj = 0),
+data.frame(x = as.POSIXct('2015-11-02,01:10:00'), y = -25,
+label = paste("Storm affected 1/06"), adj = 0),
+data.frame(x = as.POSIXct('2015-11-2 01:10:00'), y = 30,
+label = paste("Storm on 01/31 - 2/02"), adj = 0),
+data.frame(x = as.POSIXct('2015-02-20 01:10:00'), y = -23,
+label = paste("2/08, Boston experienced Storm"), adj = 0),
+data.frame(x = as.POSIXct('2015-04-01 01:10:00'), y = 28,
+label = paste("2/14, Another winter storm"), adj = 0),
+data.frame(x = as.POSIXct('2015-06-01 00:00:00'), y = -22,
+label = paste("Storm occurred on the weekend of 02/20-22"), adj = 0),
+data.frame(x = as.POSIXct('2015-03-10 00:00:00'), y = -21,
+label = paste("Focused on the South and Southeast on 02/25-26"), adj = 0))
+
+
+segments <- bind_rows(
+data.frame(x = c(as.POSIXct('2015-11-01 00:00:00'),as.POSIXct('2015-01-01 00:00:00'), as.POSIXct('2015-01-01 00:00:00'), NA), y = c(33, 33, -3, NA)),
+data.frame(x = c(as.POSIXct('2015-11-01,00:00:00'), as.POSIXct('2015-01-07 00:00:00'), as.POSIXct('2015-01-07 00:00:00'), NA), y = c(-25, -25, -22, NA)),
+data.frame(x=c(as.POSIXct('2015-11-01 01:10:00'),as.POSIXct('2015-02-02 00:00:00'), as.POSIXct('2015-02-02 00:00:00'), NA), y = c(30, 30, 0, NA)),
+data.frame(x=c(as.POSIXct('2015-2-20 01:10:00'),as.POSIXct('2015-02-08 00:00:00'), as.POSIXct('2015-02-08 00:00:00'), NA), y = c(-23, -23, -10, NA)),
+data.frame(x=c(as.POSIXct('2015-04-01 01:10:00'),as.POSIXct('2015-02-14 00:00:00'), as.POSIXct('2015-02-14 00:00:00'), NA), y = c(28, 28, -10, NA)),
+data.frame(x=c(as.POSIXct('2015-06-01 01:10:00'),as.POSIXct('2015-02-22 00:00:00'), as.POSIXct('2015-02-22 00:00:00'), NA), y = c(-22, -22, -10, NA)),
+data.frame(x=c(as.POSIXct('2015-03-10 01:10:00'),as.POSIXct('2015-02-26 00:00:00'), as.POSIXct('2015-02-26 00:00:00'), NA), y = c(-21, -21, -11, NA)))
+
+whatly_2015plot + geom_text(data = text, aes(x = x, y = y, label = label),hjust = "left", size = 3) +
+  geom_path(data = segments, aes(x = x, y = y), col = "blue")+
+  ggtitle("Average Temperature over Each 10-minute Interal in Whatly, Massachusetts")
+```
+
+
+
+#11.3
+```{r}
+a <- list(x = as.POSIXct('2015-03-20 22:50:00'),y = -4.654,text = 'Vernal Equinoxe:03-20',color ='red',xref = "x",yref = "y",showarrow = TRUE,arrowhead = 7,ax = 100,ay = 20)
+b <- list(x = as.POSIXct('2015-09-23 08:20:00'),y = 24.08,text = 'Autumnal Equinoxe:09-23',xref = "x",yref = "y",showarrow = TRUE,arrowhead = 7,ax = 80,ay = -40)
+c <- list(x = as.POSIXct('2015-06-21 16:40:00'),y = 20.94,text = 'Summer Solstices:06-21',xref = "x",yref = "y",showarrow = TRUE,arrowhead = 7,ax = 20,ay = 100)
+d<-list(x = as.POSIXct('2015-12-22 04:50:00'),y = 8.75,text = 'Winter Solstices:12-22',xref = "x",yref = "y",showarrow = TRUE,arrowhead = 7,ax = 20,ay = -80)
+
+
+plot_ly(whately_2015,x=~whately_2015$when, y=~whately_2015$temperature ,mode='line') %>% layout(title = "Average Temperature over Each 10-minute Interal in Whatly, Massachusetts",  xaxis = list(title = "When",showgrid = F), yaxis = list(title = "Temperature (degrees Fahrenheit)"))  %>%layout(annotations = a)%>% layout(annotations = b)%>% layout(annotations = c)%>% layout(annotations = d)
+  
+  
+  
+  
+  
+
+```
+
+#11.4
+```{r}
+library(dygraphs)
+
+library(xts)
+library(macleish)
+
+E= xts(x=whately_2015$temperature, order.by = whately_2015$when)
+
+dygraph(data=E,main="Average Temperature over Each 10-minute Interal in Whatly, Massachusetts",xlab = 'when',ylab='Temperature (degrees Fahrenheit)')%>% dyRangeSelector(dateWindow = c(as.POSIXct('2015-01-01 00:00:00'), as.POSIXct('2015-12-31 23:50:00')))
+
+
+
+```
+
+#11.5
+```{r}
+library(ggvis)
+
+whately_2015 %>% ggvis(x=~when)%>% layer_lines(y=~temperature) %>% add_axis( "x", title = "When") %>%add_axis("y", title = "Temperature (degrees Fahrenheit)")
+ 
+
+```
+
+
