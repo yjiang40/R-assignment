@@ -7,7 +7,7 @@ output:
   html_document: default
 ---
 #2.2  
-**randomization test, one sided:** Our null hypothesis is that the mean µ equals prespecified value $\mu_0=\ 0$ $(\ H_0:\mu_0=\ 0)$ , and our alternative is $H_1:\mu_0\ >\ 0$ because we expect the drug therapy are improve fertility
+**randomization test, one sided:** Our null hypothesis is that the mean Âµ equals prespecified value $\mu_0=\ 0$ $(\ H_0:\mu_0=\ 0)$ , and our alternative is $H_1:\mu_0\ >\ 0$ because we expect the drug therapy are improve fertility
 ```{r}
 data=c(-1, 6, 4, 6, 2, -3, 5)
 T_obs<- mean(data);T_obs
@@ -111,5 +111,5 @@ t3$power
 ```{r}
 t4=power.t.test(power = 0.9, sd=sd,delta=1.5, alternative = 'two.sided')
 t4$n
-# Sample size 35 would be necessary to detect an actual difference in means of 1.5 kÅ with a power of at least 0.9
+# Sample size 35 would be necessary to detect an actual difference in means of 1.5 kÃ… with a power of at least 0.9
 ```
