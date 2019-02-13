@@ -1,0 +1,99 @@
+---
+title: "Lab8_YuweiJiang_01"
+author: "Yuwei Jiang"
+date: "November 1, 2018"
+NetID: 'eg4962'
+Class: 'STAT630-01'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+
+---
+
+#Name:Yuwei Jiang  Class:stat630-01  NetId:eg4962
+Exercise#1
+```{r}
+
+library(openintro)
+data('ncbirths')
+
+ncbirths[1000:1010,]
+
+
+
+boxplot(gained~mature, data= ncbirths, ylab='Weight gained during pregnancy (ibs)')
+Youngmom = subset(ncbirths,mature=="younger mom")
+maturemom = subset(ncbirths, mature=='mature mom')
+summary(Youngmom$gained)
+summary(maturemom$gained)
+#The boxplot and summary statistics indicate that younger moms tend to gain more weight than mature mom during pregnancy.
+
+dim(Youngmom)
+dim(maturemom)
+#The assumptions for t test are satisfied since the sample sizes are large(867 younger moms and 133 mature moms; sample was random selected and two group are independent)
+
+
+t.test(gained~mature, data = ncbirths, conf.level=0.95)
+
+
+```
+
+
+
+#Exercise 2
+```{r}
+boxplot(mage~mature, data = ncbirths, ylab= 'age')
+summary(Youngmom$mage)
+summary(maturemom$mage)
+#Based on the summary data and the boxplot the age cutoff for younger and mature mothers is 35. Look at the summary data the max age for younger mom is 34, whereas the mininum age for mature mother is 35. In the boxplot for the age of mature mom the minimum value of a data set is 35.
+
+
+```
+
+#exercise3
+```{r}
+t.test(ncbirths$fage, ncbirths$mage, conf.level= 0.90)
+
+#true difference in means is not equal to 0. We are 90 percent confident that mean difference between  father's age and the mother's age is from 2.751706  to 3.759753.
+
+
+
+```
+
+
+#Exercise 4
+```{r}
+#Is there a significant difference in the amount of visits a younger mom or mature mon would attend?
+#null hypothesis: mu1-mu2=0   alternative hypothesis: mu1-mu2 !=0  conf.level=0.95 significance level =0.05
+
+t.test(visits~mature, data = ncbirths, conf.level=0.95)
+
+
+#According to the t.test there is a difference between the amount of vistis the patient would attend, whether they were a young mom or mature mom.
+
+
+
+```
+
+
+#Exercise5
+```{r}
+
+head(textbooks)
+#a)
+boxplot(textbooks$uclaNew,textbooks$amazNew, ylab='price',names=c('ucla', 'amaz'))
+
+
+#b)
+pricediff= textbooks$uclaNew -textbooks$amazNew
+hist(pricediff, xlab='price difference', main='')
+mean(pricediff)
+
+#c)
+length(textbooks$uclaNew)
+length(textbooks$amazNew)
+# The assumptions for t test are satisfied that the sample sizes are larger than 30(73 prices for both amazon and ucla; sample was random selected and two group are independent.
+t.test(textbooks$uclaNew,textbooks$amazNew, alternative='greater', conf.level = 0.95)
+#alternative hypothesis:true. Since p value is 0.08 which is greater than 0.05,  we reject null hypothesis. Difference in means is greater than 0. 95 percent confidence interval: -2.200374       Inf
+```

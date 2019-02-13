@@ -1,0 +1,75 @@
+---
+title: "Lab8"
+author: "ViviJ"
+date: "October 25, 2018"
+output: html_document
+---
+
+#EXercise 1
+```{r}
+
+library(HistData)
+velocity <- Michelson$velocity
+head(Michelson)
+test_velocity<- t.test(velocity, alternative = 'two.sided' ,mu=734.5)
+test_velocity$p.value < 0.05
+# The hypothesis tests that rejected H0 = 734.5 (had p-values less than 0.05) is 4.44912e-27.
+```
+
+
+#Exercise 2
+```{r}
+set.seed(999)
+pvals <- rep(0,10000)
+for (i in 1:10000) {
+  x<-runif(30,0,1)
+  pvals[i]<- t.test(x,alternative = 'two.sided', mu=0.5)$p.value
+}
+sum(pvals <= 0.05)
+sum(pvals <= 0.05) / 10000
+# The proportion of tests that reject H0(had p-values less than 0.05) is 0.0537, which is close to o.o5 significance level.So, it's true that sample mean is 0.5.
+
+
+
+
+```
+
+#Exercise 3
+```{r}
+set.seed(998)
+pvals1<-rep(0,10000)
+for (i in 1:10000) {
+  x1=runif(2,0,1)
+  pvals1[i]<-t.test(x1,alternative='two.sided',mu=0.5)$p.value
+}
+sum(pvals1<=0.05)
+sum(pvals1 <= 0.05) / 10000
+# The proportion of tests that reject H0(had p-values less than 0.05) is 0.0727, which is greater than o.o5 significance level. So, it's not true that sample mean is 0.5. Based on CLT, the sample size should be larger than 30, then the result of sample mean will be close to 0.5.
+
+
+
+
+```
+
+
+#Exercise 4
+```{r}
+#a)
+test_power1 <- power.t.test(n=35, delta = 1.5, sd=3.0, sig.level = 0.05, type = 'one.sample',alternative='two.sided')
+test_power1$power
+1-test_power1$power
+#The power is 0.8195, the probability of a type 2 error is 0.1805.
+test_power2 <- power.t.test(n=35, delta = 1.5, sd=3.0, sig.level = 0.1, type = 'one.sample', alternative = 'two.sided')
+test_power2$power
+1-test_power2$power
+#The power is 0.8950, the probability of a type 2 error is 0.1050.
+
+
+```
+```{r}
+#b)
+power.t.test(delta = 1,power = 0.8, sd=3.0, sig.level = 0.05, type = 'one.sample', alternative='two.sided')
+#A sample size of n = 73 would be required. 
+
+
+```

@@ -1,0 +1,96 @@
+
+```{r}
+data_url <- "https://github.com/ericwfox/stat630data/raw/master/Employee_Compensation2017.csv"
+employee2017 <- read.csv(data_url, header = TRUE)
+
+data_url <- "https://github.com/ericwfox/stat630data/raw/master/cdc.csv"
+cdc <- read.csv(data_url, header = TRUE)
+z=round(abs(qnorm((1-0.99)/2)),3)
+z
+
+```
+#Exercise1
+```{r}
+pmeanht = mean(cdc$height)
+sd(cdc$height)
+
+set.seed(999)
+samp1=sample(cdc$height,40)
+sd(samp1)
+cdcsci_lower99 = mean(samp1) - z*sd(samp1)/sqrt(40)
+cdcsci_upper99 = mean(samp1)+z*sd(samp1)/sqrt(40)
+round(c(cdcsci_lower99, cdcsci_upper99),3)
+pmeanht
+#Yes, the confidence interval of this sample  is (65.046,68.254). It contains the  population mean height 67.18 for all 20,000 individuals in the data set.
+
+
+
+
+
+```
+#Exercise 2
+```{r}
+count = 0
+mu = mean(cdc$height)
+for (i in 1:1000) { 
+  samp_i=sample(cdc$height,40)
+  ci_lower= mean(samp_i)- z*sd(samp_i)/sqrt(40)
+  ci_upper= mean(samp_i) + z*sd(samp_i)/sqrt(40)
+  if(mu >= ci_lower & mu <= ci_upper){
+    count = count + 1
+  }
+}
+count
+count/1000
+#The interval coverage is 98.6%, which is reasonably close to the 99% confidence level.
+
+
+
+```
+#Exercise3
+```{r}
+z1=round(abs(qnorm((1-0.9)/2)),3)
+empmeans= mean(employee2017$Salaries)
+
+set.seed(999)
+samp2= sample(employee2017$Salaries, 100)
+empsci_lower = mean(samp2)- z1*sd(samp2)/sqrt(100)
+empsci_upper = mean(samp2)+ z1*sd(samp2)/sqrt(100)
+round(c(empsci_lower,empsci_upper),2)
+empmeans
+#Yes, the confidence interval  of this sample is (63116.89,77803.92). It contains the  population mean salaries 67062.38 for all city employees in the data set.
+
+
+
+```
+#Exercise 4
+```{r}
+count1 = 0
+mu1 = mean(employee2017$Salaries)
+for (i in 1:1000) { 
+  samp1_i=sample(employee2017$Salaries,100)
+  ci_lower1= mean(samp1_i)- z1*sd(samp1_i)/sqrt(100)
+  ci_upper1= mean(samp1_i) + z1*sd(samp1_i)/sqrt(100)
+  if(mu1 >= ci_lower1 & mu1 <= ci_upper1){
+    count1 = count1 + 1
+  }
+}
+count1
+count1/1000
+#The interval coverage is 90.8%  is reasonably close to the 90% confidence level.
+
+
+
+
+```
+#Exercise 5
+```{r}
+getwd()
+setwd("D:/study/STAT630")
+locations = read.csv("Film_Locations_in_San_Francisco.csv", header = TRUE)
+head(locations)
+dim(locations)
+
+
+
+````

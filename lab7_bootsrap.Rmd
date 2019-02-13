@@ -1,0 +1,94 @@
+
+#Exercise 1.
+```{r}
+
+library(resampledata)
+```
+#a)
+```{r}
+Chlorine <- Bangladesh$Chlorine
+Chlorine <- Chlorine[!is.na(Chlorine)]
+summary(Chlorine)
+par(mfrow=c(1,2))
+hist(Chlorine)
+qqnorm(Chlorine)
+qqline(Chlorine)
+
+
+
+```
+
+#b)
+```{r}
+set.seed(9999)
+n= length(Chlorine)
+replicates =rep(0,5000)
+for (i in 1:5000) {
+  boot_samp= sample(Chlorine, size = n, replace = TRUE)
+  replicates[i]= mean(boot_samp)
+}
+par(mfrow=c(1,2))
+hist(replicates, xlab = 'replicates of sample mean', main = '')
+abline(v=mean(Chlorine),col='red')
+qqnorm(replicates)
+qqline(replicates)
+
+
+
+```
+
+#c)
+```{r}
+sd(replicates)
+quantile(replicates, c(0.025,0.975))
+
+
+
+```
+
+
+#d)
+```{r}
+z=abs(round(qnorm(0.025),2))
+
+ci_lower=mean(Chlorine)-z*sd(Chlorine)/sqrt(n)
+ci_upper=  mean(Chlorine)+z*sd(Chlorine)/sqrt(n)
+round(c(ci_lower, ci_upper), 2)
+
+#we see that the endpoints of 95% bootstrap and z confidence intervals are close. also, the z confidence interval is narror than the endpoints of 95% bootstrap.
+
+
+```
+
+
+#Exercise 2
+#a)
+```{r}
+replicates1= rep(0,5000)
+for (i in 1:5000) {
+  boot_samp1 = sample(Chlorine,size = n, replace = TRUE)
+  replicates1[i]= median(boot_samp1)
+}
+par(mfrow=c(1,2))
+hist(replicates1, xlab='replicates of sample median', main = '')
+abline(v=median(Chlorine),col='red')
+qqnorm(replicates1)
+qqline(replicates1)
+
+
+
+```
+
+#b)
+```{r}
+sd(replicates1)
+
+```
+
+#c)
+```{r}
+quantile(replicates1, c(0.025,0.975))
+
+
+```
+
