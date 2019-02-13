@@ -1,18 +1,7 @@
----
-title: "Stat. 651-02 Homework 2"
-Name: Yuwei Jiang
-output:
-  html_document:
-    df_print: paged
-  html_notebook: default
-  word_document: default
-Date: October 29, 2018
----
-#Name:Yuwei Jiang  NetID:eg4962
+
 
 #11.1
 ```{r message=FALSE}
-library(shiny)
 library(datetime)
 library(macleish)
 library(tidyverse)
@@ -95,11 +84,6 @@ d<-list(x = as.POSIXct('2015-12-22 04:50:00'),y = 8.75,text = 'Winter Solstices:
 
 
 plot_ly(whately_2015,x=~whately_2015$when, y=~whately_2015$temperature ,mode='line') %>% layout(title = "Average Temperature over Each 10-minute Interal in Whatly, Massachusetts",  xaxis = list(title = "When",showgrid = F), yaxis = list(title = "Temperature (degrees Fahrenheit)"))  %>%layout(annotations = a)%>% layout(annotations = b)%>% layout(annotations = c)%>% layout(annotations = d)
-  
-  
-  
-  
-  
 
 ```
 
