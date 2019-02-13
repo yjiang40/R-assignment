@@ -1,0 +1,115 @@
+---
+title: "stat631_hw1"
+author: "J"
+date: "January 31, 2019"
+output:
+  word_document: default
+  html_document: default
+---
+#2.2  
+**randomization test, one sided:** Our null hypothesis is that the mean µ equals prespecified value $\mu_0=\ 0$ $(\ H_0:\mu_0=\ 0)$ , and our alternative is $H_1:\mu_0\ >\ 0$ because we expect the drug therapy are improve fertility
+```{r}
+data=c(-1, 6, 4, 6, 2, -3, 5)
+T_obs<- mean(data);T_obs
+res<- array()
+MC<- 20000
+for(mc in 1:MC){
+random_sign <- sample(c(-1, 1), length(data), replace = TRUE)
+data_new<- random_sign*abs(data)
+Stat<- mean(data_new)
+res[mc]<-Stat
+}
+pval=mean(res>=T_obs);pval
+#p-value is 0.05235, and is greater than 0.05. The results support the null hypothesis. We accept the null hypothesis that the drug has no effect on the bulls' fertility.
+```
+
+#2.3 
+1) Let them choose.
+*benifit*:Children has preference in eating habits. They will eat more when they like the food and eat less when they don't like. Let them choose can make sure they like the diet.Easy to conduct.
+*risk*:they do not use a randomization. It is difficult to model and understand the mechanism that is being used.
+2) Take the first 10 for A, the second 10 for B.
+*benifit*:They are not predictable and deterministic and easy to conduct.
+*risks*:they do not use a randomization. It is difficult to model and understand the mechanism that is being used.And the first 10 children may come from the nearest or same location, and second 10 may come from other location.
+3) Alternate A, B, A, B.
+*benefit*:The design is randomized and will help guard against confounding.
+4) Toss a coin for each child in the study: heads  A, tails  B
+*benifit*: Coin tosses is a physical randomization methods which is believed to produce random results with known properties. This method put approximately half the patients with features include age, gender, health status, and so on each treatment group.
+*risk*: Skilled magicians can toss coins that come up heads every time.It is important to make sure that any physical randomization that you use is done well.
+
+5) Get 20 children; choose 10 at random for A, the rest for B.
+*benifit*:The design is randomized and will help guard against confounding.
+
+#2.4 
+**randomization test, Two-sided test:** We test the null hypothesis that two treatments have equal average numbers of Copepoda, and alternative hypothsis that two treatments have inequal average numbers of Copepoda. The null hypothesis is $H_0:\mu_1=\mu_2$  and our alternative is $H_1:\mu_1\neq\mu_2$ 
+```{r}
+reduced=c(256, 159, 149)
+neutral=c(54, 123, 248)
+mix=c(reduced, neutral)
+
+S_obs=mean(reduced)-mean(neutral);S_obs
+MC=20000
+
+sim_res<- c()
+for(mc in 1:MC){
+id<-sample(1:6,3,replace = FALSE)
+sim_res[mc]<- abs(mean(mix[id])-mean(mix[-id]) )
+}
+mean(sim_res>=S_obs)
+# p-value is 0.3959 which is greater than 0.05. we accept the null hypothsis that the two treatments have equal average numbers of Copepoda.
+```
+
+#part 2
+#a)
+Assumptions: *independent samples* from a *normal distribution* with *mean and variance, both unknown*, and assume the *variance is equal*.
+**Two sample t test, one sided to check if higher baking temperature results in wafers with a lower mean photoresist thickness:**Use $\alpha = 0.5$ , null hypotheis is wafers have a same mean photoresist thickness under two different temperatures. Alternative hypothesis is that higher baking temperature results in wafers with a lower mean photoresist thickness $H_0: \mu_1=\mu_2$ vs $H_1: \mu_1>\mu_2$
+```{r}
+x_95=c(11.176,7.089,8.097,11.739,11.291,10.759,6.467,8.315);x_100=c(5.263,6.748,7.461,7.015,8.133,7.418,3.772,8.963)
+t1=t.test(x_95,x_100, alternative = 'greater', conf.level = 0.95, var.equal = TRUE )
+t1$statistic
+qt(0.95,14)
+#since the test statistics greater than qt(0.95,14)=1.761, less than 2.67,reject H0. There appears to be a lower mean thickness at the higher temperature. This is also seen in the computer output. 
+```
+**Two sample t test, two sided:**null hypotheis is wafers have a same mean photoresist thickness under two different temperatures. Alternative hypothesis wafers have a different mean photoresist thickness under two different temperatures. $H_0: \mu_1=\mu_2$ vs $H_1: \mu_1 \neq\mu_2$
+```{r}
+t2=t.test(x_95,x_100,var.equal = TRUE, conf.level = 0.95, alternative = 'two.sided')
+```
+
+#b)
+```{r}
+t1$p.value
+#P-value for the one side test conducted in a) is 0.009058979, which is less than 0.05. Therefore, we reject null hypothesis. There appears to be a lower mean thickness at the higher temperature.
+t2$p.value
+#p-value for the two side test conducted in a) is 0.01812, which is less than 0.05. we reject null hypothesis.There appears to be different mean photoresist thickness under two different temperature.
+```
+#c)
+```{r}
+t2$conf.int
+#the 95% confidence interval for the difference in means is (0.4995743,4.5404257). We are 95% confident that the difference of photoresist thickness of wafers baked under 95 celsius degrees and 100 celsius degrees is between 0.4995743 and 4.5404257.
+#This lower confidence bound is greater than 0; therefore, there is a difference in the two temperatures on the thickness of the photoresist. 
+```
+#d)
+```{r}
+q1 <- qqnorm(x_95, plot.it = FALSE)
+q2 <- qqnorm(x_100, plot.it = FALSE)
+plot(range(q1$x, q2$x), range(q1$y, q2$y), type = "n", main = "QQ Plot: 95 celsius degrees, 100 celsius degrees",
+xlab="Theoretical normal quantile", ylab = "Data points")
+points(q1)
+points(q2, col = "red", pch = 3)
+qqline(x_95)
+qqline(x_100)
+#There are no significant deviations from the normality assumptions. 
+```
+#e)
+```{r}
+sd=sqrt((7*sd(x_95)^2+7*sd(x_100)^2)/14)
+sd
+t3=power.t.test(n=8, sd=sd,delta = 2.5, alternative = 'two.sided')
+t3$power
+# The power of this test for detecting an actual difference in means of 2.5 photoresist thickness is 0.6945829.
+```
+#f)
+```{r}
+t4=power.t.test(power = 0.9, sd=sd,delta=1.5, alternative = 'two.sided')
+t4$n
+# Sample size 35 would be necessary to detect an actual difference in means of 1.5 kÅ with a power of at least 0.9
+```
